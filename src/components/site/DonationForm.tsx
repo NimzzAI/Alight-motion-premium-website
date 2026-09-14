@@ -83,7 +83,10 @@ export function DonationForm() {
     return (
       <Card>
         <CardContent className="flex flex-col items-center gap-3 py-10 text-center">
-          <h3 className="text-lg font-semibold text-foreground">Makasih banyak! 🥰💖</h3>
+          <h3 className="flex items-center gap-2 text-lg font-semibold text-foreground">
+            Makasih banyak!
+            <i className="fa-solid fa-heart text-primary" aria-hidden="true" />
+          </h3>
           <p className="max-w-sm text-sm text-muted-foreground">
             Bukti transfer kamu udah sampai. Kebaikan kamu bikin layanan ini bisa terus jalan dan
             bantu lebih banyak orang lagi. Semoga rezekinya makin lancar ya!
@@ -102,9 +105,11 @@ export function DonationForm() {
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="rounded-md border border-primary/30 bg-primary/5 px-3 py-2.5 text-sm text-foreground">
             <i className="fa-solid fa-heart mr-1.5 text-primary" aria-hidden="true" />
+            Minimal donasi <span className="font-semibold">Rp1.000</span> agar dana bisa ditarik.
             Bukti transfer <span className="font-semibold">wajib</span> dikirim ya, biar donasi
             kamu bisa langsung dicek dan diucapkan terima kasih dengan benar. Tanpa bukti, kami
-            nggak bisa memverifikasi donasinya 🥺
+            nggak bisa memverifikasi donasinya{" "}
+            <i className="fa-regular fa-face-sad-tear" aria-hidden="true" />
           </div>
 
           <div className="space-y-2">
