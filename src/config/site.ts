@@ -7,7 +7,7 @@ export const siteConfig = {
   keywords:
     "alight motion premium, alight motion creator, aktivasi alight motion, magic link, nimzz, gratis, unofficial",
   author: "Nimzz",
-  ogImage: "/images/og-image.png",
+  ogImage: "/images/og-image.jpg",
   logo: "/images/logo.png",
   thumbnail: "/images/thumbnail.png",
 };
