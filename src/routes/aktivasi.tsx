@@ -4,6 +4,7 @@ import { ActivationFlow } from "@/components/site/ActivationFlow";
 import { AfterSuccess } from "@/components/site/AfterSuccess";
 import { ApiStatusDot } from "@/components/site/ApiStatusDot";
 import { Button } from "@/components/ui/button";
+import { absoluteUrl } from "@/config/site";
 
 const description =
   "Aktivasi Alight Motion Premium langkah demi langkah: masukkan email, kirim link, salin magic link, lalu verifikasi.";
@@ -15,9 +16,9 @@ export const Route = createFileRoute("/aktivasi")({
       { name: "description", content: description },
       { property: "og:title", content: "Aktivasi — Alight Motion Premium Creator" },
       { property: "og:description", content: description },
-      { property: "og:url", content: "/aktivasi" },
+      { property: "og:url", content: absoluteUrl("/aktivasi") },
     ],
-    links: [{ rel: "canonical", href: "/aktivasi" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/aktivasi") }],
   }),
   component: AktivasiPage,
 });

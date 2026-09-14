@@ -5,7 +5,7 @@ import { ApiStatusDot } from "@/components/site/ApiStatusDot";
 import { Disclaimer } from "@/components/site/Disclaimer";
 import { WelcomeModal } from "@/components/site/WelcomeModal";
 import { Button } from "@/components/ui/button";
-import { siteConfig } from "@/config/site";
+import { siteConfig, absoluteUrl } from "@/config/site";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -16,9 +16,9 @@ export const Route = createFileRoute("/")({
       { name: "author", content: siteConfig.author },
       { property: "og:title", content: "Alight Motion Premium Creator" },
       { property: "og:description", content: siteConfig.description },
-      { property: "og:url", content: "/" },
+      { property: "og:url", content: absoluteUrl("/") },
     ],
-    links: [{ rel: "canonical", href: "/" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/") }],
   }),
   component: Home,
 });

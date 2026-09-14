@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { Disclaimer } from "@/components/site/Disclaimer";
+import { absoluteUrl } from "@/config/site";
 
 const description =
   "Penjelasan sederhana cara kerja website: website ini hanya menghubungkan kamu dengan API layanan aktivasi.";
@@ -12,9 +13,9 @@ export const Route = createFileRoute("/sistem")({
       { name: "description", content: description },
       { property: "og:title", content: "Tentang Sistem — Alight Motion Premium Creator" },
       { property: "og:description", content: description },
-      { property: "og:url", content: "/sistem" },
+      { property: "og:url", content: absoluteUrl("/sistem") },
     ],
-    links: [{ rel: "canonical", href: "/sistem" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/sistem") }],
   }),
   component: SistemPage,
 });

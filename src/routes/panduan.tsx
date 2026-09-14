@@ -2,6 +2,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 
 import { AfterSuccess } from "@/components/site/AfterSuccess";
 import { Button } from "@/components/ui/button";
+import { absoluteUrl } from "@/config/site";
 
 const description =
   "Panduan lengkap step-by-step untuk pemula: dari memasukkan email sampai verifikasi magic link.";
@@ -13,9 +14,9 @@ export const Route = createFileRoute("/panduan")({
       { name: "description", content: description },
       { property: "og:title", content: "Panduan Lengkap — Alight Motion Premium Creator" },
       { property: "og:description", content: description },
-      { property: "og:url", content: "/panduan" },
+      { property: "og:url", content: absoluteUrl("/panduan") },
     ],
-    links: [{ rel: "canonical", href: "/panduan" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/panduan") }],
   }),
   component: PanduanPage,
 });

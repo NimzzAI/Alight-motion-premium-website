@@ -13,7 +13,7 @@ import appCss from "../styles.css?url";
 import { reportError } from "../lib/error-reporting";
 import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
-import { siteConfig } from "@/config/site";
+import { siteConfig, absoluteUrl } from "@/config/site";
 
 function NotFoundComponent() {
   return (
@@ -87,14 +87,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "theme-color", content: "#f7f8fa" },
       { property: "og:site_name", content: siteConfig.siteName },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: siteConfig.ogImage },
+      { property: "og:title", content: siteConfig.title },
+      { property: "og:description", content: siteConfig.description },
+      { property: "og:url", content: absoluteUrl("/") },
+      { property: "og:image", content: absoluteUrl(siteConfig.ogImage) },
+      { property: "og:image:width", content: "1717" },
+      { property: "og:image:height", content: "916" },
+      { property: "og:locale", content: "id_ID" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: siteConfig.ogImage },
+      { name: "twitter:title", content: siteConfig.title },
+      { name: "twitter:description", content: siteConfig.description },
+      { name: "twitter:image", content: absoluteUrl(siteConfig.ogImage) },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "canonical", href: absoluteUrl("/") },
       { rel: "icon", href: "/favicon.png", type: "image/png" },
-      { rel: "apple-touch-icon", href: "/images/logo.png" },
+      { rel: "apple-touch-icon", href: siteConfig.logo },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {

@@ -8,6 +8,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import { absoluteUrl } from "@/config/site";
 
 const description =
   "Solusi untuk email tidak masuk, INVALID_EMAIL, INVALID_OOB_CODE, EXPIRED_OOB_CODE, TOO_MANY_ATTEMPTS, API offline, dan aktivasi gagal.";
@@ -19,9 +20,9 @@ export const Route = createFileRoute("/troubleshooting")({
       { name: "description", content: description },
       { property: "og:title", content: "Mengalami Masalah? — Alight Motion Premium Creator" },
       { property: "og:description", content: description },
-      { property: "og:url", content: "/troubleshooting" },
+      { property: "og:url", content: absoluteUrl("/troubleshooting") },
     ],
-    links: [{ rel: "canonical", href: "/troubleshooting" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/troubleshooting") }],
   }),
   component: TroubleshootingPage,
 });

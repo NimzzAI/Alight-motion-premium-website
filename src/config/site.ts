@@ -11,3 +11,7 @@ export const siteConfig = {
   logo: "/images/logo.png",
   thumbnail: "/images/thumbnail.png",
 };
+
+export function absoluteUrl(path = "") {
+  return `${siteConfig.siteUrl}${path}`;
+}

@@ -6,6 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { absoluteUrl } from "@/config/site";
 
 const description =
   "Pertanyaan yang sering ditanyakan tentang Alight Motion Premium Creator: gratis, unofficial, magic link, dan status API.";
@@ -42,9 +43,9 @@ export const Route = createFileRoute("/faq")({
       { name: "description", content: description },
       { property: "og:title", content: "FAQ — Alight Motion Premium Creator" },
       { property: "og:description", content: description },
-      { property: "og:url", content: "/faq" },
+      { property: "og:url", content: absoluteUrl("/faq") },
     ],
-    links: [{ rel: "canonical", href: "/faq" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/faq") }],
     scripts: [
       {
         type: "application/ld+json",

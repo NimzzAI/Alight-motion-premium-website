@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { ApiStatusCard } from "@/components/site/ApiStatusCard";
+import { absoluteUrl } from "@/config/site";
 import { useApiInfo } from "@/hooks/use-api-status";
 
 const description =
@@ -13,9 +14,9 @@ export const Route = createFileRoute("/status")({
       { name: "description", content: description },
       { property: "og:title", content: "API Status — Alight Motion Premium Creator" },
       { property: "og:description", content: description },
-      { property: "og:url", content: "/status" },
+      { property: "og:url", content: absoluteUrl("/status") },
     ],
-    links: [{ rel: "canonical", href: "/status" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/status") }],
   }),
   component: StatusPage,
 });
