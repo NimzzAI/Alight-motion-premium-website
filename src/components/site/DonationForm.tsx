@@ -105,7 +105,7 @@ export function DonationForm() {
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="rounded-md border border-primary/30 bg-primary/5 px-3 py-2.5 text-sm text-foreground">
             <i className="fa-solid fa-heart mr-1.5 text-primary" aria-hidden="true" />
-            Minimal donasi <span className="font-semibold">Rp1.000</span> agar saldo bisa ditarik.
+            Minimal donasi <span className="font-semibold">Rp1.000</span> agar dana bisa ditarik.
             Bukti transfer <span className="font-semibold">wajib</span> dikirim ya, biar donasi
             kamu bisa langsung dicek dan diucapkan terima kasih dengan benar. Tanpa bukti, kami
             nggak bisa memverifikasi donasinya{" "}

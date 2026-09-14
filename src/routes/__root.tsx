@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportError } from "../lib/error-reporting";
 import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
+import { NimzzAI } from "@/components/site/NimzzAI";
 import { Toaster } from "@/components/ui/sonner";
 import { siteConfig, absoluteUrl } from "@/config/site";
 
@@ -193,6 +194,7 @@ function RootComponent() {
         </main>
         <Footer />
       </div>
+      <NimzzAI />
       <Toaster />
     </QueryClientProvider>
   );
