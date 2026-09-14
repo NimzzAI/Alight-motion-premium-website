@@ -11,6 +11,7 @@ const navItems = [
   { to: "/troubleshooting", label: "Troubleshooting" },
   { to: "/faq", label: "FAQ" },
   { to: "/status", label: "API Status" },
+  { to: "/donasi", label: "Donasi" },
 ];
 
 export function Navbar() {

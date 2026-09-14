@@ -1,12 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useApiInfo } from "@/hooks/use-api-status";
 import { sendMagicLink, verifyMagicLink, type ActionResult } from "@/lib/am-api.functions";
+
+const LINK_LIFETIME_SECONDS = 5 * 60;
 
 type Step = 1 | 2 | 3 | 4 | 5;
 
@@ -17,6 +19,12 @@ const stepTitles: Record<Step, string> = {
   4: "Salin Magic Link",
   5: "Masukkan Magic Link & Verifikasi",
 };
+
+function formatCountdown(totalSeconds: number): string {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+}
 
 function Notice({ tone, children }: { tone: "info" | "warning" | "error"; children: React.ReactNode }) {
   const toneClass = {
@@ -44,16 +52,32 @@ export function ActivationFlow() {
   const [magicLink, setMagicLink] = useState("");
   const [sendResult, setSendResult] = useState<ActionResult | null>(null);
   const [verifyResult, setVerifyResult] = useState<ActionResult | null>(null);
+  const [linkSentAt, setLinkSentAt] = useState<number | null>(null);
+  const [nowTick, setNowTick] = useState(() => Date.now());
 
   const info = useApiInfo();
   const send = useServerFn(sendMagicLink);
   const verify = useServerFn(verifyMagicLink);
 
+  const elapsedSeconds = linkSentAt === null ? 0 : Math.floor((nowTick - linkSentAt) / 1000);
+  const secondsLeft = Math.max(LINK_LIFETIME_SECONDS - elapsedSeconds, 0);
+  const linkExpired = linkSentAt !== null && secondsLeft === 0;
+
+  useEffect(() => {
+    if (linkSentAt === null || linkExpired) return;
+    const interval = setInterval(() => setNowTick(Date.now()), 1000);
+    return () => clearInterval(interval);
+  }, [linkSentAt, linkExpired]);
+
   const sendMutation = useMutation({
     mutationFn: (value: string) => send({ data: { email: value } }),
     onSuccess: (result) => {
       setSendResult(result);
-      if (result.ok) setStep(3);
+      if (result.ok) {
+        setLinkSentAt(Date.now());
+        setNowTick(Date.now());
+        setStep(3);
+      }
     },
     onError: () =>
       setSendResult({
@@ -71,6 +95,14 @@ export function ActivationFlow() {
         message: "Permintaan gagal dikirim. Periksa koneksi internet kamu lalu coba lagi.",
       }),
   });
+
+  function restartFlow() {
+    setStep(1);
+    setMagicLink("");
+    setSendResult(null);
+    setVerifyResult(null);
+    setLinkSentAt(null);
+  }
 
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
 
@@ -197,6 +229,30 @@ Email dikirim`}</pre>
             {sendResult?.ok && (
               <Notice tone="info">Link berhasil dikirim. Sekarang buka inbox email kamu.</Notice>
             )}
+            {linkSentAt !== null && (
+              <div
+                className={`flex items-center justify-between rounded-xl border p-3.5 text-sm ${
+                  linkExpired
+                    ? "border-destructive/40 bg-destructive/8 text-destructive"
+                    : "border-warning/40 bg-warning/10 text-warning-foreground"
+                }`}
+              >
+                <span className="flex items-center gap-2">
+                  <i
+                    className={linkExpired ? "fa-solid fa-circle-exclamation" : "fa-regular fa-clock"}
+                    aria-hidden="true"
+                  />
+                  {linkExpired
+                    ? "Magic link sudah kedaluwarsa. Kirim ulang link untuk mendapatkan yang baru."
+                    : "Magic link berlaku selama 5 menit sejak dikirim."}
+                </span>
+                {!linkExpired && (
+                  <span className="font-mono font-semibold tabular-nums">
+                    {formatCountdown(secondsLeft)}
+                  </span>
+                )}
+              </div>
+            )}
             <ol className="space-y-3 text-sm leading-relaxed text-muted-foreground">
               <li>1. Buka aplikasi Gmail atau email provider kamu.</li>
               <li>2. Cari email yang berhubungan dengan layanan ini.</li>
@@ -226,6 +282,30 @@ Email dikirim`}</pre>
             <p className="text-sm leading-relaxed text-muted-foreground">
               Magic link adalah link khusus yang dikirim melalui email untuk proses verifikasi.
             </p>
+            {linkSentAt !== null && (
+              <div
+                className={`flex items-center justify-between rounded-xl border p-3.5 text-sm ${
+                  linkExpired
+                    ? "border-destructive/40 bg-destructive/8 text-destructive"
+                    : "border-warning/40 bg-warning/10 text-warning-foreground"
+                }`}
+              >
+                <span className="flex items-center gap-2">
+                  <i
+                    className={linkExpired ? "fa-solid fa-circle-exclamation" : "fa-regular fa-clock"}
+                    aria-hidden="true"
+                  />
+                  {linkExpired
+                    ? "Magic link sudah kedaluwarsa. Kembali ke step sebelumnya dan kirim ulang."
+                    : "Sisa waktu sebelum link kedaluwarsa (5 menit sejak dikirim):"}
+                </span>
+                {!linkExpired && (
+                  <span className="font-mono font-semibold tabular-nums">
+                    {formatCountdown(secondsLeft)}
+                  </span>
+                )}
+              </div>
+            )}
             <ol className="space-y-3 text-sm leading-relaxed text-muted-foreground">
               <li>1. Buka email yang kamu terima.</li>
               <li>2. Cari link verifikasi di dalam email tersebut.</li>
@@ -294,6 +374,15 @@ Email dikirim`}</pre>
                 {verifyResult.code ? ` (${verifyResult.code})` : ""}
               </Notice>
             )}
+            {verifyResult &&
+              !verifyResult.ok &&
+              (verifyResult.code === "INVALID_OOB_CODE" ||
+                verifyResult.code === "EXPIRED_OOB_CODE") && (
+                <Button type="button" variant="outline" onClick={restartFlow} className="w-full">
+                  <i className="fa-solid fa-rotate-left" aria-hidden="true" />
+                  Ulang dari awal
+                </Button>
+              )}
           </form>
         )}
       </div>
@@ -324,16 +413,23 @@ function SuccessCard({
             <dd className="mt-0.5 font-medium break-all">{result.data?.email ?? "—"}</dd>
           </div>
           <div>
-            <dt className="text-sm text-muted-foreground">Plan</dt>
-            <dd className="mt-0.5 font-medium">{result.data?.plan ?? "—"}</dd>
+            <dt className="text-sm text-muted-foreground">UID</dt>
+            <dd className="mt-0.5 font-medium break-all">{result.data?.uid ?? "—"}</dd>
           </div>
           <div>
-            <dt className="text-sm text-muted-foreground">Durasi</dt>
-            <dd className="mt-0.5 font-medium">{result.data?.duration ?? "—"}</dd>
+            <dt className="text-sm text-muted-foreground">Order ID</dt>
+            <dd className="mt-0.5 font-medium break-all">{result.data?.orderId ?? "—"}</dd>
           </div>
           <div>
-            <dt className="text-sm text-muted-foreground">Berlaku sampai</dt>
+            <dt className="text-sm text-muted-foreground">Berlaku s/d</dt>
             <dd className="mt-0.5 font-medium">{result.data?.validUntil ?? "—"}</dd>
+          </div>
+          <div className="sm:col-span-2">
+            <dt className="text-sm text-muted-foreground">Plan</dt>
+            <dd className="mt-0.5 font-medium">
+              {result.data?.plan ?? "—"}
+              {result.data?.duration ? ` · ${result.data.duration}` : ""}
+            </dd>
           </div>
         </dl>
 

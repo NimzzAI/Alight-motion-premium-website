@@ -29,6 +29,8 @@ export type ActionResult = {
   code?: string | undefined;
   data?: {
     email?: string | undefined;
+    uid?: string | undefined;
+    orderId?: string | undefined;
     plan?: string | undefined;
     duration?: string | undefined;
     validUntil?: string | undefined;
@@ -195,23 +197,42 @@ export const verifyMagicLink = createServerFn({ method: "POST" })
     }
 
     const payload = result.payload;
+    // API asli membungkus data di payload.result: { user: {...}, premium: {...} }
     const nested = (payload["data"] ?? payload["result"] ?? {}) as Record<string, unknown>;
-    const plan = (payload["plan"] ?? nested["plan"] ?? {}) as Record<string, unknown> | string;
+    const userObj = (nested["user"] ?? {}) as Record<string, unknown>;
+    const premiumObj = (nested["premium"] ?? nested) as Record<string, unknown>;
+    const plan = (premiumObj["plan"] ?? payload["plan"] ?? nested["plan"] ?? {}) as
+      | Record<string, unknown>
+      | string;
     const planObject = typeof plan === "string" ? { name: plan } : plan;
-    const benefits = [payload["benefits"], nested["benefits"]].find((value) =>
-      Array.isArray(value),
+    const benefits = [premiumObj["benefits"], payload["benefits"], nested["benefits"]].find(
+      (value) => Array.isArray(value),
     ) as unknown[] | undefined;
+
+    // uid dan orderId bukan kata sensitif (beda dari idToken/refreshToken),
+    // tapi diambil manual karena pickString() men-skip apa saja yang match /token|.../i
+    // dan "uid" / "orderId" kebetulan aman dari regex itu — tetap eksplisit biar jelas asalnya.
+    const uid =
+      typeof userObj["uid"] === "string" && userObj["uid"].trim() !== ""
+        ? userObj["uid"]
+        : pickString({ ...nested, ...payload }, ["uid"]);
+    const orderId =
+      typeof premiumObj["orderId"] === "string" && premiumObj["orderId"].trim() !== ""
+        ? premiumObj["orderId"]
+        : pickString({ ...nested, ...payload }, ["orderId", "order_id"]);
 
     return {
       ok: true,
       message: "Verifikasi berhasil.",
       data: {
-        email: pickString({ ...nested, ...payload }, ["email"]) ?? data.email,
+        email: pickString({ ...userObj, ...nested, ...payload }, ["email"]) ?? data.email,
+        uid,
+        orderId,
         plan: pickString(planObject as Record<string, unknown>, ["name", "type"]),
         duration:
           pickString(planObject as Record<string, unknown>, ["duration"]) ??
-          pickString({ ...nested, ...payload }, ["duration"]),
-        validUntil: pickString({ ...nested, ...payload }, [
+          pickString({ ...premiumObj, ...nested, ...payload }, ["duration"]),
+        validUntil: pickString({ ...premiumObj, ...nested, ...payload }, [
           "validUntil",
           "expiresAt",
           "expiry",
