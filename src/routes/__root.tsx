@@ -103,7 +103,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "canonical", href: absoluteUrl("/") },
+      { rel: "icon", href: "/favicon.ico", sizes: "any" },
       { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "shortcut icon", href: "/favicon.ico" },
       { rel: "apple-touch-icon", href: siteConfig.logo },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
@@ -114,6 +116,47 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css",
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: siteConfig.siteName,
+          url: siteConfig.siteUrl,
+          description: siteConfig.description,
+          inLanguage: "id-ID",
+          publisher: {
+            "@type": "Organization",
+            name: siteConfig.author,
+            url: absoluteUrl("/"),
+            logo: absoluteUrl(siteConfig.logo),
+          },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          name: siteConfig.siteName,
+          applicationCategory: "UtilitiesApplication",
+          operatingSystem: "Web",
+          url: siteConfig.siteUrl,
+          image: absoluteUrl(siteConfig.ogImage),
+          description: siteConfig.description,
+          offers: {
+            "@type": "Offer",
+            price: "0",
+            priceCurrency: "IDR",
+          },
+          author: {
+            "@type": "Organization",
+            name: siteConfig.author,
+          },
+        }),
       },
     ],
   }),
