@@ -5,6 +5,17 @@ import { absoluteUrl, siteConfig } from "@/config/site";
 const description =
   "Halaman kontribusi — ucapan terima kasih kepada Nimzz, pembuat dan pengelola layanan Alight Motion Premium Creator.";
 
+const socialLinks = [
+  {
+    label: "WhatsApp Channel",
+    icon: "fa-brands fa-whatsapp",
+    href: "https://whatsapp.com/channel/0029VbBhZWdGJP8HlbGaE63Q",
+  },
+  { label: "TikTok", icon: "fa-brands fa-tiktok", href: "https://tiktok.com/@nimzz_bocil_pokemon" },
+  { label: "Telegram", icon: "fa-brands fa-telegram", href: "https://t.me/Nimzz4" },
+  { label: "GitHub", icon: "fa-brands fa-github", href: "https://github.com/Nimzz-pemboy" },
+];
+
 export const Route = createFileRoute("/kontribusi")({
   head: () => ({
     meta: [
@@ -24,7 +35,7 @@ function KontribusiPage() {
     <section className="pb-16">
       <div className="relative h-48 w-full overflow-hidden sm:h-64">
         <img
-          src="/images/thumbnail.png"
+          src="/banner.jpg"
           alt="Banner Nimzz"
           className="h-full w-full object-cover"
         />
@@ -35,7 +46,7 @@ function KontribusiPage() {
         <div className="relative">
           <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-amber-300 via-yellow-200 to-amber-400 blur-md opacity-80" />
           <img
-            src="/images/logo.png"
+            src="/avatar.jpg"
             alt="Avatar Nimzz"
             className="relative size-32 rounded-full border-4 border-amber-300 object-cover shadow-[0_0_24px_rgba(251,191,36,0.55)] sm:size-36"
           />
@@ -57,30 +68,55 @@ function KontribusiPage() {
             Founder & Developer
           </span>
         </div>
+
+        <div className="mt-10 w-full max-w-sm">
+          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Terhubung dengan Nimzz
+          </p>
+          <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {socialLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center gap-2 rounded-xl border border-border bg-card px-3 py-4 text-xs text-muted-foreground transition-colors hover:border-amber-300/50 hover:text-foreground"
+              >
+                <i className={`${link.icon} text-xl`} aria-hidden="true" />
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </div>
       </div>
 
       <style>{`
         .gold-shimmer {
-          background: linear-gradient(
+          background-image: linear-gradient(
             90deg,
-            #b8860b 0%,
-            #fde68a 25%,
-            #fffbe0 50%,
-            #fde68a 75%,
-            #b8860b 100%
+            #92700f 0%,
+            #d4a017 20%,
+            #f5d576 45%,
+            #fff3c4 55%,
+            #f5d576 65%,
+            #d4a017 85%,
+            #92700f 100%
           );
-          background-size: 200% auto;
+          background-size: 250% auto;
+          background-repeat: no-repeat;
           -webkit-background-clip: text;
           background-clip: text;
+          -webkit-text-fill-color: transparent;
           color: transparent;
+          text-shadow: 0 1px 12px rgba(180, 130, 20, 0.25);
           animation: gold-shimmer-move 3.5s linear infinite;
         }
         @keyframes gold-shimmer-move {
           0% {
-            background-position: 200% center;
+            background-position: 250% center;
           }
           100% {
-            background-position: -200% center;
+            background-position: -250% center;
           }
         }
         @media (prefers-reduced-motion: reduce) {
