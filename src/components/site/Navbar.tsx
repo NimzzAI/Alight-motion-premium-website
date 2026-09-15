@@ -69,28 +69,35 @@ export function Navbar() {
       </nav>
 
       {open && (
-        <div className="animate-fade-in border-t border-border bg-background lg:hidden">
-          <ul className="container-page flex flex-col py-3">
-            {navItems.map((item) => (
-              <li key={item.to}>
-                <Link
-                  to={item.to}
-                  onClick={() => setOpen(false)}
-                  className="block rounded-md px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground data-[status=active]:font-medium data-[status=active]:text-foreground"
-                >
-                  {item.label}
-                </Link>
+        <>
+          <div
+            className="fixed inset-0 z-30 bg-black/20 lg:hidden"
+            onClick={() => setOpen(false)}
+            aria-hidden="true"
+          />
+          <div className="animate-fade-in relative z-40 border-t border-border bg-background lg:hidden">
+            <ul className="container-page flex flex-col py-3">
+              {navItems.map((item) => (
+                <li key={item.to}>
+                  <Link
+                    to={item.to}
+                    onClick={() => setOpen(false)}
+                    className="block rounded-md px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground data-[status=active]:font-medium data-[status=active]:text-foreground"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+              <li className="px-3 pt-3">
+                <Button asChild className="w-full">
+                  <Link to="/aktivasi" onClick={() => setOpen(false)}>
+                    Mulai Gratis
+                  </Link>
+                </Button>
               </li>
-            ))}
-            <li className="px-3 pt-3">
-              <Button asChild className="w-full">
-                <Link to="/aktivasi" onClick={() => setOpen(false)}>
-                  Mulai Gratis
-                </Link>
-              </Button>
-            </li>
-          </ul>
-        </div>
+            </ul>
+          </div>
+        </>
       )}
     </header>
   );

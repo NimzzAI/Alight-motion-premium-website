@@ -43,16 +43,13 @@ function KontribusiPage() {
       </div>
 
       <div className="container-page -mt-16 flex flex-col items-center text-center">
-        <div className="relative">
-          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-amber-300 via-yellow-200 to-amber-400 blur-md opacity-80" />
-          <img
-            src="/avatar.jpg"
-            alt="Avatar Nimzz"
-            className="relative size-32 rounded-full border-4 border-amber-300 object-cover shadow-[0_0_24px_rgba(251,191,36,0.55)] sm:size-36"
-          />
-        </div>
+        <img
+          src="/avatar.jpg"
+          alt="Avatar Nimzz"
+          className="size-32 rounded-full border-2 border-border object-cover shadow-md sm:size-36"
+        />
 
-        <h1 className="gold-shimmer mt-5 text-3xl font-bold sm:text-4xl">Nimzz</h1>
+        <h1 className="mt-5 text-3xl font-bold text-foreground sm:text-4xl">Nimzz</h1>
         <p className="mt-2 text-sm text-muted-foreground">Pembuat & Pengelola Layanan</p>
 
         <p className="mt-6 max-w-lg text-sm leading-relaxed text-muted-foreground">
@@ -63,7 +60,7 @@ function KontribusiPage() {
         </p>
 
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <span className="inline-flex items-center gap-2 rounded-full border border-amber-300/40 bg-amber-300/10 px-4 py-1.5 text-xs font-medium text-amber-600 dark:text-amber-300">
+          <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-medium text-primary">
             <i className="fa-solid fa-crown" aria-hidden="true" />
             Founder & Developer
           </span>
@@ -80,7 +77,7 @@ function KontribusiPage() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center gap-2 rounded-xl border border-border bg-card px-3 py-4 text-xs text-muted-foreground transition-colors hover:border-amber-300/50 hover:text-foreground"
+                className="flex flex-col items-center gap-2 rounded-xl border border-border bg-card px-3 py-4 text-xs text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
               >
                 <i className={`${link.icon} text-xl`} aria-hidden="true" />
                 {link.label}
@@ -89,43 +86,6 @@ function KontribusiPage() {
           </div>
         </div>
       </div>
-
-      <style>{`
-        .gold-shimmer {
-          background-image: linear-gradient(
-            90deg,
-            #92700f 0%,
-            #d4a017 20%,
-            #f5d576 45%,
-            #fff3c4 55%,
-            #f5d576 65%,
-            #d4a017 85%,
-            #92700f 100%
-          );
-          background-size: 250% auto;
-          background-repeat: no-repeat;
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-          color: transparent;
-          text-shadow: 0 1px 12px rgba(180, 130, 20, 0.25);
-          animation: gold-shimmer-move 3.5s linear infinite;
-        }
-        @keyframes gold-shimmer-move {
-          0% {
-            background-position: 250% center;
-          }
-          100% {
-            background-position: -250% center;
-          }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .gold-shimmer {
-            animation: none;
-            background-position: 0% center;
-          }
-        }
-      `}</style>
     </section>
   );
 }
