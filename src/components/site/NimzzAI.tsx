@@ -126,9 +126,20 @@ export function NimzzAI() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-3">
+    <>
       {isOpen && (
-        <div className="flex h-[70vh] max-h-[560px] w-[92vw] max-w-sm flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-2xl">
+        <div
+          className="fixed inset-0 z-40 bg-black/30"
+          onClick={() => setIsOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+      <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-3">
+        {isOpen && (
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="flex h-[70vh] max-h-[560px] w-[92vw] max-w-sm flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-2xl"
+          >
           <div className="flex items-center justify-between border-b border-border bg-surface px-4 py-3">
             <div className="flex items-center gap-2">
               <span className="size-2 rounded-full bg-green-500" />
@@ -223,6 +234,7 @@ export function NimzzAI() {
           aria-hidden="true"
         />
       </button>
-    </div>
+      </div>
+    </>
   );
 }

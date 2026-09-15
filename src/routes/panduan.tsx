@@ -21,12 +21,15 @@ export const Route = createFileRoute("/panduan")({
   component: PanduanPage,
 });
 
+type StepImage = { src: string; caption: string };
+
 type Step = {
   title: string;
   intro: string;
   items?: string[];
   note?: string;
   diagram?: string;
+  images?: StepImage[];
 };
 
 const steps: Step[] = [
@@ -51,16 +54,39 @@ const steps: Step[] = [
       "Jika tidak menemukan email, periksa Inbox, Spam, Promotions, dan Junk.",
       "Tunggu beberapa saat jika email belum muncul.",
     ],
+    images: [
+      { src: "/images/panduan/01-buka-gmail.jpg", caption: "1. Buka aplikasi Gmail di HP kamu." },
+      {
+        src: "/images/panduan/02-menu-spam.jpg",
+        caption: "2. Pencet ikon tiga garis (menu) di pojok kiri atas.",
+      },
+      {
+        src: "/images/panduan/03-pilih-spam.jpg",
+        caption:
+          "3. Pilih folder “Spam” — email verifikasi sering masuk sini, bukan Inbox utama.",
+      },
+    ],
     note: "Sudah menemukan emailnya? Tekan tombol “Email Sudah Ditemukan” pada halaman Aktivasi.",
   },
   {
     title: "Salin Magic Link",
     intro: "Magic link adalah link khusus yang dikirim melalui email untuk proses verifikasi.",
     items: [
-      "Buka email.",
-      "Cari link verifikasi.",
-      "Salin link tersebut.",
+      "Buka email dari noreply@alight-creative.firebaseapp.com.",
+      "Cari tulisan biru “Sign in to Alight Creative” di dalam email.",
+      "JANGAN pencet tulisan itu langsung. Tahan/tap-lama sampai muncul menu popup.",
+      "Pilih “Salin URL” dari menu popup yang muncul.",
       "Jangan membagikan link kepada orang lain.",
+    ],
+    images: [
+      {
+        src: "/images/panduan/04-buka-email.jpg",
+        caption: "4. Buka email, cari tulisan “Sign in to Alight Creative”. Jangan dipencet dulu.",
+      },
+      {
+        src: "/images/panduan/05-salin-url.jpg",
+        caption: "5. Tahan tulisan itu sampai muncul menu, lalu pilih “Salin URL”.",
+      },
     ],
     note: "Jangan membagikan magic link atau informasi akun kepada orang lain.",
   },
@@ -110,6 +136,24 @@ function PanduanPage() {
                         </li>
                       ))}
                     </ol>
+                  )}
+
+                  {step.images && (
+                    <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                      {step.images.map((img) => (
+                        <figure key={img.src}>
+                          <img
+                            src={img.src}
+                            alt={img.caption}
+                            className="w-full rounded-lg border border-border object-cover"
+                            loading="lazy"
+                          />
+                          <figcaption className="mt-1.5 text-xs leading-snug text-muted-foreground">
+                            {img.caption}
+                          </figcaption>
+                        </figure>
+                      ))}
+                    </div>
                   )}
 
                   {step.diagram && (
