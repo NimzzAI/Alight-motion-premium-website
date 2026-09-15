@@ -9,8 +9,47 @@ import { useApiInfo } from "@/hooks/use-api-status";
 import { sendMagicLink, verifyMagicLink, type ActionResult } from "@/lib/am-api.functions";
 
 const LINK_LIFETIME_SECONDS = 5 * 60;
+const ACTIVATION_STORAGE_KEY = "am_activation_state";
 
 type Step = 1 | 2 | 3 | 4 | 5;
+
+type PersistedState = {
+  step: Step;
+  email: string;
+  magicLink: string;
+  linkSentAt: number | null;
+  sendResult: ActionResult | null;
+  verifyResult: ActionResult | null;
+};
+
+function loadPersistedState(): Partial<PersistedState> | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(ACTIVATION_STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+function savePersistedState(state: PersistedState) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(ACTIVATION_STORAGE_KEY, JSON.stringify(state));
+  } catch {
+    // ignore storage quota / privacy-mode errors
+  }
+}
+
+function clearPersistedState() {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.removeItem(ACTIVATION_STORAGE_KEY);
+  } catch {
+    // ignore
+  }
+}
 
 const stepTitles: Record<Step, string> = {
   1: "Masukkan Email",
@@ -54,6 +93,7 @@ export function ActivationFlow() {
   const [verifyResult, setVerifyResult] = useState<ActionResult | null>(null);
   const [linkSentAt, setLinkSentAt] = useState<number | null>(null);
   const [nowTick, setNowTick] = useState(() => Date.now());
+  const [hydrated, setHydrated] = useState(false);
 
   const info = useApiInfo();
   const send = useServerFn(sendMagicLink);
@@ -64,10 +104,40 @@ export function ActivationFlow() {
   const linkExpired = linkSentAt !== null && secondsLeft === 0;
 
   useEffect(() => {
+    // Restore setelah mount (bukan saat init state) supaya HTML dari server
+    // dan render pertama di client tetap sama persis — menghindari hydration mismatch.
+    const persisted = loadPersistedState();
+    if (persisted) {
+      if (persisted.step) setStep(persisted.step);
+      if (persisted.email) setEmail(persisted.email);
+      if (persisted.magicLink) setMagicLink(persisted.magicLink);
+      if (persisted.linkSentAt) setLinkSentAt(persisted.linkSentAt);
+      if (persisted.sendResult) setSendResult(persisted.sendResult);
+      if (persisted.verifyResult) setVerifyResult(persisted.verifyResult);
+      if (persisted.linkSentAt) setNowTick(Date.now());
+    }
+    setHydrated(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if (linkSentAt === null || linkExpired) return;
     const interval = setInterval(() => setNowTick(Date.now()), 1000);
     return () => clearInterval(interval);
   }, [linkSentAt, linkExpired]);
+
+  useEffect(() => {
+    // Jangan simpan sebelum proses restore di atas selesai — kalau tidak,
+    // render pertama (state default) bisa langsung menimpa data yang tersimpan.
+    if (!hydrated) return;
+    // Jangan simpan state kalau sudah berhasil verifikasi — flow selesai, biar
+    // buka halaman ini lagi nanti mulai bersih dari step 1, bukan nyangkut di SuccessCard.
+    if (verifyResult?.ok) {
+      clearPersistedState();
+      return;
+    }
+    savePersistedState({ step, email, magicLink, linkSentAt, sendResult, verifyResult });
+  }, [hydrated, step, email, magicLink, linkSentAt, sendResult, verifyResult]);
 
   const sendMutation = useMutation({
     mutationFn: (value: string) => send({ data: { email: value } }),
@@ -102,6 +172,7 @@ export function ActivationFlow() {
     setSendResult(null);
     setVerifyResult(null);
     setLinkSentAt(null);
+    clearPersistedState();
   }
 
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
@@ -111,7 +182,7 @@ export function ActivationFlow() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 transition-opacity duration-200 ${hydrated ? "opacity-100" : "opacity-0"}`}>
       <ol className="flex flex-wrap gap-2" aria-label="Langkah aktivasi">
         {([1, 2, 3, 4, 5] as Step[]).map((value) => (
           <li key={value}>

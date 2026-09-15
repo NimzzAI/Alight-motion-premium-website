@@ -12,6 +12,7 @@ const navItems = [
   { to: "/faq", label: "FAQ" },
   { to: "/status", label: "API Status" },
   { to: "/donasi", label: "Donasi" },
+  { to: "/kontribusi", label: "Kontribusi" },
 ];
 
 export function Navbar() {

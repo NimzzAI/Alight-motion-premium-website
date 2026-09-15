@@ -134,7 +134,7 @@ export function NimzzAI() {
           aria-hidden="true"
         />
       )}
-      <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-3">
+      <div className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] right-4 z-50 flex flex-col items-end gap-3 lg:bottom-4">
         {isOpen && (
           <div
             onClick={(e) => e.stopPropagation()}

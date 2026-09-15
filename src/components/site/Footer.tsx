@@ -6,6 +6,8 @@ const links = [
   { to: "/troubleshooting", label: "Troubleshooting" },
   { to: "/status", label: "API Status" },
   { to: "/sistem", label: "Tentang Sistem" },
+  { to: "/donasi", label: "Donasi" },
+  { to: "/kontribusi", label: "Kontribusi" },
 ];
 
 export function Footer() {
