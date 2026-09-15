@@ -43,12 +43,18 @@ function KontribusiPage() {
       </div>
 
       <div className="container-page -mt-16 flex flex-col items-center text-center">
-        <img
-          src="/avatar.jpg"
-          alt="Avatar Nimzz"
-          className="size-32 rounded-full border-2 border-border object-cover shadow-md sm:size-36"
-          style={{ objectPosition: "50% 25%" }}
-        />
+        <div
+          className="relative overflow-hidden rounded-full border-2 border-border bg-card shadow-md"
+          style={{ width: 128, height: 128 }}
+        >
+          <img
+            src="/avatar.jpg"
+            alt="Avatar Nimzz"
+            width={736}
+            height={736}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        </div>
 
         <h1 className="mt-5 text-3xl font-bold text-foreground sm:text-4xl">Nimzz</h1>
         <p className="mt-2 text-sm text-muted-foreground">Pembuat & Pengelola Layanan</p>
