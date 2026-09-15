@@ -47,7 +47,6 @@ function KontribusiPage() {
           src="/avatar.jpg"
           alt="Avatar Nimzz"
           className="size-32 rounded-full border-2 border-border object-cover shadow-md sm:size-36"
-          style={{ objectPosition: "50% 65%" }}
         />
 
         <h1 className="mt-5 text-3xl font-bold text-foreground sm:text-4xl">Nimzz</h1>
