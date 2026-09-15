@@ -47,6 +47,7 @@ function KontribusiPage() {
           src="/avatar.jpg"
           alt="Avatar Nimzz"
           className="size-32 rounded-full border-2 border-border object-cover shadow-md sm:size-36"
+          style={{ objectPosition: "50% 65%" }}
         />
 
         <h1 className="mt-5 text-3xl font-bold text-foreground sm:text-4xl">Nimzz</h1>
@@ -60,8 +61,8 @@ function KontribusiPage() {
         </p>
 
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-medium text-primary">
-            <i className="fa-solid fa-crown" aria-hidden="true" />
+          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-1.5 text-xs font-medium text-foreground">
+            <i className="fa-solid fa-crown text-muted-foreground" aria-hidden="true" />
             Founder & Developer
           </span>
         </div>
