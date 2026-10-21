@@ -12,3 +12,7 @@ Allow: /
 
 User-agent: *
 Allow: /
+Disallow: /api/
+
+Host: https://alight-motion-premium-nimzz.web.id
+Sitemap: https://alight-motion-premium-nimzz.web.id/sitemap.xml

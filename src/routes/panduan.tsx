@@ -8,22 +8,42 @@ import {
   SpotlightSurface,
 } from "@/components/site/MotionPrimitives";
 import { Button } from "@/components/ui/button";
-import { absoluteUrl } from "@/config/site";
+import { absoluteUrl, buildPageSeo } from "@/config/site";
 
 const description =
-  "Panduan lengkap step-by-step untuk pemula: dari memasukkan email sampai verifikasi magic link.";
+  "Panduan lengkap step-by-step untuk pemula: dari memasukkan email, memeriksa folder Spam, menyalin URL Magic Link, hingga verifikasi Alight Motion Pro.";
 
 export const Route = createFileRoute("/panduan")({
-  head: () => ({
-    meta: [
-      { title: "Panduan Lengkap — Alight Motion Premium Creator" },
-      { name: "description", content: description },
-      { property: "og:title", content: "Panduan Lengkap — Alight Motion Premium Creator" },
-      { property: "og:description", content: description },
-      { property: "og:url", content: absoluteUrl("/panduan") },
-    ],
-    links: [{ rel: "canonical", href: absoluteUrl("/panduan") }],
-  }),
+  head: () => {
+    const seo = buildPageSeo({
+      title: "Panduan Lengkap — Alight Motion Premium Creator",
+      description,
+      path: "/panduan",
+      ogType: "article",
+    });
+    return {
+      ...seo,
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "HowTo",
+            name: "Cara Aktivasi Alight Motion Premium via Magic Link",
+            description,
+            totalTime: "PT3M",
+            step: steps.map((step, index) => ({
+              "@type": "HowToStep",
+              position: index + 1,
+              name: step.title,
+              text: step.intro,
+              url: `${absoluteUrl("/panduan")}#step-${index + 1}`,
+            })),
+          }),
+        },
+      ],
+    };
+  },
   component: PanduanPage,
 });
 

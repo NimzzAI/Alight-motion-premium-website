@@ -11,7 +11,7 @@ import {
   type CanvasTheme,
 } from "@/components/site/TestimonialCanvas";
 import { Button } from "@/components/ui/button";
-import { absoluteUrl } from "@/config/site";
+import { buildPageSeo } from "@/config/site";
 import {
   getTestimonials,
   simulateLiveTestimonial,
@@ -22,16 +22,12 @@ const description =
   "Live Canvas Testimoni aktivasi Alight Motion Premium secara real-time dengan perlindungan sensor privasi otomatis untuk email, UID, dan Order ID.";
 
 export const Route = createFileRoute("/testimoni")({
-  head: () => ({
-    meta: [
-      { title: "Live Testimoni Canvas — Alight Motion Premium Creator" },
-      { name: "description", content: description },
-      { property: "og:title", content: "Live Testimoni Canvas — Alight Motion Premium Creator" },
-      { property: "og:description", content: description },
-      { property: "og:url", content: absoluteUrl("/testimoni") },
-    ],
-    links: [{ rel: "canonical", href: absoluteUrl("/testimoni") }],
-  }),
+  head: () =>
+    buildPageSeo({
+      title: "Live Testimoni Canvas — Alight Motion Premium Creator",
+      description,
+      path: "/testimoni",
+    }),
   component: TestimoniPage,
 });
 

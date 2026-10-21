@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { SectionIndex, SpotlightSurface } from "@/components/site/MotionPrimitives";
-import { absoluteUrl, siteConfig } from "@/config/site";
+import { buildPageSeo, siteConfig } from "@/config/site";
 
 const description =
-  "Halaman kontribusi — ucapan terima kasih kepada Nimzz, pembuat dan pengelola layanan Alight Motion Premium Creator.";
+  "Profil pengembang & halaman kontribusi Nimzz — pembuat dan pengelola layanan komunitas Alight Motion Premium Creator.";
 
 const socialLinks = [
   {
@@ -34,16 +34,12 @@ const socialLinks = [
 ];
 
 export const Route = createFileRoute("/kontribusi")({
-  head: () => ({
-    meta: [
-      { title: "Kontribusi — Alight Motion Premium Creator" },
-      { name: "description", content: description },
-      { property: "og:title", content: "Kontribusi — Alight Motion Premium Creator" },
-      { property: "og:description", content: description },
-      { property: "og:url", content: absoluteUrl("/kontribusi") },
-    ],
-    links: [{ rel: "canonical", href: absoluteUrl("/kontribusi") }],
-  }),
+  head: () =>
+    buildPageSeo({
+      title: "Profil & Kontribusi Nimzz — Alight Motion Premium Creator",
+      description,
+      path: "/kontribusi",
+    }),
   component: KontribusiPage,
 });
 

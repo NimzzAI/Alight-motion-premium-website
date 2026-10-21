@@ -5,22 +5,18 @@ import { AfterSuccess } from "@/components/site/AfterSuccess";
 import { ApiStatusDot } from "@/components/site/ApiStatusDot";
 import { SectionIndex, SpotlightSurface } from "@/components/site/MotionPrimitives";
 import { Button } from "@/components/ui/button";
-import { absoluteUrl } from "@/config/site";
+import { buildPageSeo } from "@/config/site";
 
 const description =
-  "Aktivasi Alight Motion Premium langkah demi langkah: masukkan email, kirim link, salin magic link, lalu verifikasi.";
+  "Aktivasi Alight Motion Premium langkah demi langkah: masukkan email, kirim link, salin magic link, lalu verifikasi instan.";
 
 export const Route = createFileRoute("/aktivasi")({
-  head: () => ({
-    meta: [
-      { title: "Aktivasi — Alight Motion Premium Creator" },
-      { name: "description", content: description },
-      { property: "og:title", content: "Aktivasi — Alight Motion Premium Creator" },
-      { property: "og:description", content: description },
-      { property: "og:url", content: absoluteUrl("/aktivasi") },
-    ],
-    links: [{ rel: "canonical", href: absoluteUrl("/aktivasi") }],
-  }),
+  head: () =>
+    buildPageSeo({
+      title: "Aktivasi Akun — Alight Motion Premium Creator",
+      description,
+      path: "/aktivasi",
+    }),
   component: AktivasiPage,
 });
 

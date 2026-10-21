@@ -9,22 +9,18 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { absoluteUrl } from "@/config/site";
+import { buildPageSeo } from "@/config/site";
 
 const description =
-  "Solusi untuk email tidak masuk, INVALID_EMAIL, INVALID_OOB_CODE, EXPIRED_OOB_CODE, TOO_MANY_ATTEMPTS, API offline, dan aktivasi gagal.";
+  "Solusi kendala aktivasi Alight Motion Premium: email tidak masuk, INVALID_EMAIL, INVALID_OOB_CODE, EXPIRED_OOB_CODE, TOO_MANY_ATTEMPTS, dan API offline.";
 
 export const Route = createFileRoute("/troubleshooting")({
-  head: () => ({
-    meta: [
-      { title: "Mengalami Masalah? — Alight Motion Premium Creator" },
-      { name: "description", content: description },
-      { property: "og:title", content: "Mengalami Masalah? — Alight Motion Premium Creator" },
-      { property: "og:description", content: description },
-      { property: "og:url", content: absoluteUrl("/troubleshooting") },
-    ],
-    links: [{ rel: "canonical", href: absoluteUrl("/troubleshooting") }],
-  }),
+  head: () =>
+    buildPageSeo({
+      title: "Troubleshooting & Solusi Error — Alight Motion Premium Creator",
+      description,
+      path: "/troubleshooting",
+    }),
   component: TroubleshootingPage,
 });
 

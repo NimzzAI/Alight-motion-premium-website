@@ -8,7 +8,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { absoluteUrl } from "@/config/site";
+import { buildPageSeo } from "@/config/site";
 
 const description =
   "Pertanyaan yang sering ditanyakan tentang Alight Motion Premium Creator: gratis, unofficial, magic link, dan status API.";
@@ -45,30 +45,30 @@ const faqs = [
 ];
 
 export const Route = createFileRoute("/faq")({
-  head: () => ({
-    meta: [
-      { title: "FAQ — Alight Motion Premium Creator" },
-      { name: "description", content: description },
-      { property: "og:title", content: "FAQ — Alight Motion Premium Creator" },
-      { property: "og:description", content: description },
-      { property: "og:url", content: absoluteUrl("/faq") },
-    ],
-    links: [{ rel: "canonical", href: absoluteUrl("/faq") }],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: faqs.map((faq) => ({
-            "@type": "Question",
-            name: faq.q,
-            acceptedAnswer: { "@type": "Answer", text: faq.a },
-          })),
-        }),
-      },
-    ],
-  }),
+  head: () => {
+    const seo = buildPageSeo({
+      title: "Pertanyaan Umum (FAQ) — Alight Motion Premium Creator",
+      description,
+      path: "/faq",
+    });
+    return {
+      ...seo,
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqs.map((faq) => ({
+              "@type": "Question",
+              name: faq.q,
+              acceptedAnswer: { "@type": "Answer", text: faq.a },
+            })),
+          }),
+        },
+      ],
+    };
+  },
   component: FaqPage,
 });
 

@@ -3,23 +3,19 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { ApiStatusCard } from "@/components/site/ApiStatusCard";
 import { SectionIndex, SpotlightSurface } from "@/components/site/MotionPrimitives";
 import { Button } from "@/components/ui/button";
-import { absoluteUrl } from "@/config/site";
+import { buildPageSeo } from "@/config/site";
 import { useApiInfo } from "@/hooks/use-api-status";
 
 const description =
-  "Cek status API layanan Alight Motion Premium Creator: online/offline, version, uptime, dan waktu pemeriksaan terakhir.";
+  "Cek status API layanan Alight Motion Premium Creator secara real-time: status online/offline, versi server, uptime, dan spesifikasi paket.";
 
 export const Route = createFileRoute("/status")({
-  head: () => ({
-    meta: [
-      { title: "API Status — Alight Motion Premium Creator" },
-      { name: "description", content: description },
-      { property: "og:title", content: "API Status — Alight Motion Premium Creator" },
-      { property: "og:description", content: description },
-      { property: "og:url", content: absoluteUrl("/status") },
-    ],
-    links: [{ rel: "canonical", href: absoluteUrl("/status") }],
-  }),
+  head: () =>
+    buildPageSeo({
+      title: "Status Gateway API — Alight Motion Premium Creator",
+      description,
+      path: "/status",
+    }),
   component: StatusPage,
 });
 

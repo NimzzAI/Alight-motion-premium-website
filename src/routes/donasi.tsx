@@ -3,22 +3,18 @@ import { createFileRoute } from "@tanstack/react-router";
 import { DonationForm } from "@/components/site/DonationForm";
 import { SectionIndex, SpotlightSurface } from "@/components/site/MotionPrimitives";
 import { Button } from "@/components/ui/button";
-import { absoluteUrl } from "@/config/site";
+import { buildPageSeo } from "@/config/site";
 
 const description =
-  "Dukung layanan Alight Motion Premium Creator secara sukarela lewat QRIS. Scan atau unduh QR, lalu kirim bukti transfer.";
+  "Dukung keberlanjutan server Alight Motion Premium Creator secara sukarela lewat QRIS. Scan atau unduh kode QR, lalu unggah bukti transfer.";
 
 export const Route = createFileRoute("/donasi")({
-  head: () => ({
-    meta: [
-      { title: "Donasi — Alight Motion Premium Creator" },
-      { name: "description", content: description },
-      { property: "og:title", content: "Donasi — Alight Motion Premium Creator" },
-      { property: "og:description", content: description },
-      { property: "og:url", content: absoluteUrl("/donasi") },
-    ],
-    links: [{ rel: "canonical", href: absoluteUrl("/donasi") }],
-  }),
+  head: () =>
+    buildPageSeo({
+      title: "Donasi & Dukungan Server — Alight Motion Premium Creator",
+      description,
+      path: "/donasi",
+    }),
   component: DonasiPage,
 });
 

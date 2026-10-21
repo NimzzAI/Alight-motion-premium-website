@@ -7,22 +7,18 @@ import {
   SignalPipeline,
   SpotlightSurface,
 } from "@/components/site/MotionPrimitives";
-import { absoluteUrl } from "@/config/site";
+import { buildPageSeo } from "@/config/site";
 
 const description =
-  "Penjelasan sederhana cara kerja website: website ini hanya menghubungkan kamu dengan API layanan aktivasi.";
+  "Arsitektur dan keamanan sistem Alight Motion Premium Creator: mekanisme jembatan API server-side tanpa menyimpan kredensial atau token pengguna.";
 
 export const Route = createFileRoute("/sistem")({
-  head: () => ({
-    meta: [
-      { title: "Tentang Sistem — Alight Motion Premium Creator" },
-      { name: "description", content: description },
-      { property: "og:title", content: "Tentang Sistem — Alight Motion Premium Creator" },
-      { property: "og:description", content: description },
-      { property: "og:url", content: absoluteUrl("/sistem") },
-    ],
-    links: [{ rel: "canonical", href: absoluteUrl("/sistem") }],
-  }),
+  head: () =>
+    buildPageSeo({
+      title: "Tentang Sistem & Arsitektur — Alight Motion Premium Creator",
+      description,
+      path: "/sistem",
+    }),
   component: SistemPage,
 });
 

@@ -11,21 +11,15 @@ import {
 } from "@/components/site/MotionPrimitives";
 import { WelcomeModal } from "@/components/site/WelcomeModal";
 import { Button } from "@/components/ui/button";
-import { siteConfig, absoluteUrl } from "@/config/site";
+import { siteConfig, buildPageSeo } from "@/config/site";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Alight Motion Premium Creator — Panduan Gratis oleh Nimzz" },
-      { name: "description", content: siteConfig.description },
-      { name: "keywords", content: siteConfig.keywords },
-      { name: "author", content: siteConfig.author },
-      { property: "og:title", content: "Alight Motion Premium Creator" },
-      { property: "og:description", content: siteConfig.description },
-      { property: "og:url", content: absoluteUrl("/") },
-    ],
-    links: [{ rel: "canonical", href: absoluteUrl("/") }],
-  }),
+  head: () =>
+    buildPageSeo({
+      title: siteConfig.title,
+      description: siteConfig.description,
+      path: "/",
+    }),
   component: Home,
 });
 
