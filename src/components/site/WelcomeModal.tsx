@@ -14,27 +14,43 @@ import { siteConfig } from "@/config/site";
 
 const STORAGE_KEY = "amp-welcome-dismissed";
 
-const highlights = [
-  { icon: "fa-solid fa-circle-check", text: "GRATIS" },
-  { icon: "fa-solid fa-code-branch", text: "UNOFFICIAL" },
-  { icon: "fa-solid fa-ban", text: "NOT FOR RESALE" },
-];
-
 export function WelcomeModal() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    let interacted = false;
+
     try {
-      if (localStorage.getItem(STORAGE_KEY) !== "1") setOpen(true);
+      if (localStorage.getItem(STORAGE_KEY) === "1") return;
     } catch {
-      setOpen(true);
+      return;
     }
+
+    const handleInteraction = () => {
+      if (interacted) return;
+      interacted = true;
+      timer = setTimeout(() => {
+        setOpen(true);
+      }, 12000);
+    };
+
+    window.addEventListener("scroll", handleInteraction, { passive: true, once: true });
+    window.addEventListener("pointerdown", handleInteraction, { passive: true, once: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleInteraction);
+      window.removeEventListener("pointerdown", handleInteraction);
+      if (timer) clearTimeout(timer);
+    };
   }, []);
 
   function dismiss() {
     try {
       localStorage.setItem(STORAGE_KEY, "1");
-    } catch {}
+    } catch {
+      // ignore storage errors
+    }
     setOpen(false);
   }
 
@@ -45,60 +61,73 @@ export function WelcomeModal() {
         if (!next) dismiss();
       }}
     >
-      <DialogContent className="max-w-md gap-0 overflow-hidden p-0">
-        <div className="relative h-40 w-full">
+      <DialogContent className="max-w-md gap-0 overflow-hidden rounded-xl border border-border p-0">
+        <div className="relative h-40 w-full bg-surface">
           <img
             src={siteConfig.thumbnail}
             alt="Ilustrasi Alight Motion Premium Creator"
             width={1280}
             height={800}
+            referrerPolicy="no-referrer"
             className="h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/5 to-black/10" />
-          <img
-            src={siteConfig.logo}
-            alt=""
-            width={56}
-            height={56}
-            className="absolute -bottom-6 left-6 h-14 w-14 rounded-2xl border-4 border-background object-cover shadow-lift"
-          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
+          <div className="absolute bottom-4 left-6 flex items-center gap-3">
+            <img
+              src={siteConfig.logo}
+              alt="Logo Alight Motion Creator"
+              width={44}
+              height={44}
+              referrerPolicy="no-referrer"
+              className="h-11 w-11 rounded-lg border border-white/20 object-cover shadow-md"
+            />
+            <div>
+              <p className="font-mono text-[11px] text-white/80">INFORMASI LAYANAN</p>
+              <p className="font-display text-sm font-semibold text-white">{siteConfig.siteName}</p>
+            </div>
+          </div>
         </div>
 
-        <div className="px-6 pt-10 pb-6">
+        <div className="p-6">
           <DialogHeader>
-            <DialogTitle className="text-lg leading-snug">
-              Selamat Datang di Alight Motion Premium Creator
+            <DialogTitle className="text-left text-lg leading-snug">
+              Utilitas Aktivasi Komunitas oleh Nimzz
             </DialogTitle>
-            <DialogDescription className="space-y-3 pt-2 text-left">
+            <DialogDescription className="space-y-2.5 pt-2 text-left text-sm leading-relaxed">
               <span className="block">
-                Layanan ini dibuat untuk penggunaan gratis dan bukan untuk diperjualbelikan.
+                Layanan ini dirancang sepenuhnya untuk penggunaan gratis dan dilarang keras untuk
+                diperjualbelikan kembali.
               </span>
               <span className="block">
-                Website ini merupakan layanan unofficial yang dibuat oleh Nimzz dan tidak
-                berafiliasi dengan Alight Creative/Alight Motion.
+                Sistem ini bersifat unofficial serta tidak berafiliasi dengan pihak Alight Creative
+                maupun Alight Motion.
               </span>
             </DialogDescription>
           </DialogHeader>
 
-          <div className="mt-4 flex flex-wrap gap-2">
-            {highlights.map((item) => (
-              <span
-                key={item.text}
-                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold tracking-wide text-muted-foreground"
-              >
-                <i className={item.icon} aria-hidden="true" />
-                {item.text}
-              </span>
-            ))}
+          <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-4 font-mono text-xs text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5 text-foreground">
+              <i className="fa-solid fa-check text-success" aria-hidden="true" />
+              100% Gratis
+            </span>
+            <span aria-hidden="true">·</span>
+            <span>Unofficial</span>
+            <span aria-hidden="true">·</span>
+            <span>Anti-Resale</span>
           </div>
 
-          <div className="mt-6">
+          <div className="mt-6 flex gap-2.5">
             <DialogClose asChild>
-              <Button asChild className="w-full">
+              <Button asChild className="motion-press flex-1 gap-2">
                 <Link to="/aktivasi">
-                  <i className="fa-solid fa-bolt" aria-hidden="true" />
-                  Mulai Sekarang
+                  <i className="fa-solid fa-bolt text-xs" aria-hidden="true" />
+                  <span>Mulai Aktivasi</span>
                 </Link>
+              </Button>
+            </DialogClose>
+            <DialogClose asChild>
+              <Button variant="outline" className="motion-press" onClick={dismiss}>
+                Tutup
               </Button>
             </DialogClose>
           </div>

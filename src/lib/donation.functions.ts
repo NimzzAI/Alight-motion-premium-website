@@ -60,7 +60,7 @@ export const sendDonationProof = createServerFn({ method: "POST" })
     }
 
     const caption = [
-      "\u{1F49D} Donasi baru masuk!",
+      "[DONASI BARU MASUK]",
       `Atas nama: ${donorName}`,
       `Waktu: ${new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })}`,
       noteText ? `Catatan: ${noteText}` : undefined,
@@ -74,10 +74,11 @@ export const sendDonationProof = createServerFn({ method: "POST" })
     telegramForm.append("photo", file, file.name || "bukti-transfer.jpg");
 
     try {
-      const response = await fetch(
-        `https://api.telegram.org/bot${botToken}/sendPhoto`,
-        { method: "POST", body: telegramForm, signal: AbortSignal.timeout(20000) },
-      );
+      const response = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+        method: "POST",
+        body: telegramForm,
+        signal: AbortSignal.timeout(20000),
+      });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok || payload?.ok !== true) {
         return { ok: false, message: errorMessage("TELEGRAM_FAILED") };

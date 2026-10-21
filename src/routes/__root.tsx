@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useLocation,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -20,19 +21,23 @@ import { siteConfig, absoluteUrl } from "@/config/site";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+    <div className="bg-studio-grid flex min-h-[75vh] items-center justify-center px-4">
+      <div className="animate-fade-up max-w-md rounded-2xl border border-border bg-card p-8 text-center shadow-soft">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-surface text-primary">
+          <i className="fa-solid fa-compass text-lg" aria-hidden="true" />
+        </div>
+        <h1 className="mt-4 text-3xl font-bold text-foreground">404</h1>
+        <h2 className="mt-1 text-lg font-semibold text-foreground">Halaman tidak ditemukan</h2>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+          Halaman yang kamu cari tidak tersedia atau sudah dipindahkan.
         </p>
         <div className="mt-6">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="motion-press inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90"
           >
-            Go home
+            <i className="fa-solid fa-arrow-left text-xs" aria-hidden="true" />
+            Kembali ke Beranda
           </Link>
         </div>
       </div>
@@ -48,29 +53,34 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   }, [error]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
+    <div className="bg-studio-grid flex min-h-[75vh] items-center justify-center px-4">
+      <div className="animate-fade-up max-w-md rounded-2xl border border-border bg-card p-8 text-center shadow-soft">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl border border-destructive/30 bg-destructive/10 text-destructive">
+          <i className="fa-solid fa-triangle-exclamation text-lg" aria-hidden="true" />
+        </div>
+        <h1 className="mt-4 text-xl font-semibold tracking-tight text-foreground">
+          Halaman gagal dimuat
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+          Terjadi kendala saat menyiapkan halaman ini. Coba muat ulang atau kembali ke beranda.
         </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
+        <div className="mt-6 flex flex-wrap justify-center gap-2.5">
           <button
             onClick={() => {
               router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="motion-press inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
           >
-            Try again
+            <i className="fa-solid fa-rotate-right text-xs" aria-hidden="true" />
+            Coba Lagi
           </button>
           <a
             href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+            className="motion-press inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-foreground hover:bg-surface"
           >
-            Go home
+            <i className="fa-solid fa-house text-xs" aria-hidden="true" />
+            Beranda
           </a>
         </div>
       </div>
@@ -87,7 +97,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: siteConfig.description },
       { name: "keywords", content: siteConfig.keywords },
       { name: "author", content: siteConfig.author },
-      { name: "theme-color", content: "#f7f8fa" },
+      { name: "theme-color", content: "#f8f7f4" },
       { property: "og:site_name", content: siteConfig.siteName },
       { property: "og:type", content: "website" },
       { property: "og:title", content: siteConfig.title },
@@ -114,7 +124,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap",
       },
       {
         rel: "stylesheet",
@@ -185,13 +195,16 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useLocation({ select: (location) => location.pathname });
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen flex-col">
+      <div className="bg-studio-grid flex min-h-screen flex-col">
         <Navbar />
         <main className="flex-1">
-          <Outlet />
+          <div key={pathname} className="animate-page-enter">
+            <Outlet />
+          </div>
         </main>
         <Footer />
         <BottomNav />

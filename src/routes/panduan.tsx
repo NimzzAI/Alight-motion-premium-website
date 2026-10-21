@@ -1,6 +1,12 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 
 import { AfterSuccess } from "@/components/site/AfterSuccess";
+import {
+  Reveal,
+  SectionIndex,
+  SignalPipeline,
+  SpotlightSurface,
+} from "@/components/site/MotionPrimitives";
 import { Button } from "@/components/ui/button";
 import { absoluteUrl } from "@/config/site";
 
@@ -25,28 +31,32 @@ type StepImage = { src: string; caption: string };
 
 type Step = {
   title: string;
+  icon: string;
   intro: string;
   items?: string[];
   note?: string;
-  diagram?: string;
+  showPipeline?: boolean;
   images?: StepImage[];
 };
 
 const steps: Step[] = [
   {
     title: "Masukkan Email",
+    icon: "fa-solid fa-envelope",
     intro: "Masukkan email yang ingin kamu gunakan pada kolom email.",
     note: "Gunakan email yang benar-benar bisa kamu akses karena link akan dikirim ke email tersebut.",
   },
   {
     title: "Kirim Link",
+    icon: "fa-solid fa-paper-plane",
     intro:
       "Tekan tombol Kirim Link. Website akan meneruskan permintaan ke layanan, lalu email dikirim ke alamat kamu. Selama proses berjalan, tombol menampilkan status loading.",
-    diagram: "Email\n ↓\nWebsite\n ↓\nAPI\n ↓\nEmail dikirim",
+    showPipeline: true,
     note: "Jika berhasil, akan muncul pesan: “Link berhasil dikirim. Sekarang buka inbox email kamu.”",
   },
   {
     title: "Cek Email",
+    icon: "fa-solid fa-inbox",
     intro: "Buka email kamu dan cari email dari layanan ini.",
     items: [
       "Buka aplikasi Gmail atau email provider kamu.",
@@ -62,14 +72,14 @@ const steps: Step[] = [
       },
       {
         src: "/images/panduan/03-pilih-spam.jpg",
-        caption:
-          "3. Pilih folder “Spam” — email verifikasi sering masuk sini, bukan Inbox utama.",
+        caption: "3. Pilih folder “Spam” — email verifikasi sering masuk sini, bukan Inbox utama.",
       },
     ],
     note: "Sudah menemukan emailnya? Tekan tombol “Email Sudah Ditemukan” pada halaman Aktivasi.",
   },
   {
     title: "Salin Magic Link",
+    icon: "fa-solid fa-link",
     intro: "Magic link adalah link khusus yang dikirim melalui email untuk proses verifikasi.",
     items: [
       "Buka email dari noreply@alight-creative.firebaseapp.com.",
@@ -92,12 +102,14 @@ const steps: Step[] = [
   },
   {
     title: "Masukkan Magic Link",
+    icon: "fa-regular fa-clipboard",
     intro:
       "Pada halaman Aktivasi tersedia dua kolom: Email dan Magic Link. Paste link yang tadi kamu salin ke kolom Magic Link.",
     note: "Pastikan link disalin utuh, tanpa ada karakter yang terpotong.",
   },
   {
     title: "Verifikasi",
+    icon: "fa-solid fa-shield-halved",
     intro:
       "Tekan Verifikasi & Aktivasi. Website akan menampilkan status “Memeriksa link...” lalu “Memproses verifikasi...”. Jika berhasil, muncul pesan Verifikasi berhasil dan hasil aktivasi kamu ditampilkan.",
   },
@@ -106,105 +118,126 @@ const steps: Step[] = [
 function PanduanPage() {
   return (
     <>
-      <section className="container-page pt-12">
-        <h1 className="text-3xl font-semibold sm:text-4xl">Panduan Lengkap</h1>
-        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-          Panduan ini ditulis untuk pemula. Cukup ikuti nomornya dari atas ke bawah.
-        </p>
+      <section className="container-page pt-10 pb-8 sm:pt-14">
+        <div className="animate-fade-up flex flex-wrap items-end justify-between gap-4 border-b border-border pb-6">
+          <div>
+            <SectionIndex index="PANDUAN" label="Langkah demi Langkah" detail="6 Tahap" />
+            <h1 className="mt-2.5 text-3xl font-semibold sm:text-4xl">Panduan Lengkap</h1>
+            <p className="mt-2.5 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+              Panduan ini ditulis untuk pemula. Cukup ikuti nomornya dari atas ke bawah.
+            </p>
+          </div>
+          <Button asChild className="motion-press gap-2">
+            <Link to="/aktivasi">
+              <i className="fa-solid fa-bolt text-xs" aria-hidden="true" />
+              <span>Mulai Aktivasi</span>
+            </Link>
+          </Button>
+        </div>
 
         <ol className="mt-10 space-y-6">
           {steps.map((step, index) => (
-            <li
-              key={step.title}
-              className="rounded-2xl border border-border bg-card p-6 shadow-soft sm:p-8"
-            >
-              <div className="flex flex-col gap-6 sm:flex-row">
-                <span className="font-display text-4xl leading-none font-semibold text-primary/30 sm:text-5xl">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <div className="flex-1">
-                  <h2 className="text-xl font-semibold">
-                    Step {index + 1} — {step.title}
-                  </h2>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{step.intro}</p>
-
-                  {step.items && (
-                    <ol className="mt-4 space-y-2 text-sm leading-relaxed text-muted-foreground">
-                      {step.items.map((item, itemIndex) => (
-                        <li key={item}>
-                          {itemIndex + 1}. {item}
-                        </li>
-                      ))}
-                    </ol>
-                  )}
-
-                  {step.images && (
-                    <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
-                      {step.images.map((img) => (
-                        <figure key={img.src}>
-                          <img
-                            src={img.src}
-                            alt={img.caption}
-                            className="w-full rounded-lg border border-border object-cover"
-                            loading="lazy"
-                          />
-                          <figcaption className="mt-1.5 text-xs leading-snug text-muted-foreground">
-                            {img.caption}
-                          </figcaption>
-                        </figure>
-                      ))}
+            <li key={step.title}>
+              <Reveal delay={index * 60}>
+                <SpotlightSurface className="p-6 sm:p-8" interactive={false}>
+                  <div className="grid gap-6 lg:grid-cols-[8rem_1fr]">
+                    <div className="flex items-center justify-between border-b border-border pb-3 lg:flex-col lg:items-start lg:justify-start lg:border-r lg:border-b-0 lg:pr-6 lg:pb-0">
+                      <span className="font-mono text-3xl font-semibold text-primary tabular-nums sm:text-4xl">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span className="mt-0 inline-flex items-center gap-1.5 font-mono text-xs text-muted-foreground lg:mt-3">
+                        <i className={`${step.icon} text-primary`} aria-hidden="true" />
+                        <span>Step {index + 1}</span>
+                      </span>
                     </div>
-                  )}
 
-                  {step.diagram && (
-                    <pre className="mt-4 rounded-xl border border-border bg-surface p-4 font-sans text-sm leading-relaxed text-muted-foreground">
-                      {step.diagram}
-                    </pre>
-                  )}
-
-                  {index === 0 && (
-                    <div className="mt-4 rounded-xl border border-dashed border-border bg-surface p-4">
-                      <p className="text-xs text-muted-foreground">
-                        Ilustrasi posisi form: kolom Email berada di bagian atas kartu Step 1 pada
-                        halaman Aktivasi.
+                    <div>
+                      <h2 className="text-xl font-semibold text-foreground">
+                        Step {index + 1} — {step.title}
+                      </h2>
+                      <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">
+                        {step.intro}
                       </p>
-                      <div className="mt-3 space-y-2">
-                        <div className="h-3 w-20 rounded bg-border" />
-                        <div className="h-9 rounded-lg border border-border bg-card" />
-                        <div className="h-9 w-40 rounded-lg bg-primary/20" />
-                      </div>
+
+                      {step.items && (
+                        <ol className="mt-4 space-y-2 rounded-xl border border-border bg-surface/50 p-4 text-sm leading-relaxed text-muted-foreground">
+                          {step.items.map((item, itemIndex) => (
+                            <li key={item}>
+                              {itemIndex + 1}. {item}
+                            </li>
+                          ))}
+                        </ol>
+                      )}
+
+                      {step.images && (
+                        <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                          {step.images.map((img) => (
+                            <figure
+                              key={img.src}
+                              className="overflow-hidden rounded-xl border border-border bg-surface"
+                            >
+                              <img
+                                src={img.src}
+                                alt={img.caption}
+                                referrerPolicy="no-referrer"
+                                className="w-full object-cover transition-transform duration-500 ease-out hover:scale-[1.03]"
+                                loading="lazy"
+                              />
+                              <figcaption className="border-t border-border p-3 text-xs leading-snug text-muted-foreground">
+                                {img.caption}
+                              </figcaption>
+                            </figure>
+                          ))}
+                        </div>
+                      )}
+
+                      {step.showPipeline && (
+                        <div className="mt-5">
+                          <SignalPipeline compact />
+                        </div>
+                      )}
+
+                      {step.note && (
+                        <div className="mt-5 flex gap-3 rounded-xl border border-warning/35 bg-warning/8 p-3.5 text-xs leading-relaxed text-warning-foreground sm:text-sm">
+                          <i
+                            className="fa-solid fa-triangle-exclamation mt-0.5 shrink-0 text-warning"
+                            aria-hidden="true"
+                          />
+                          <span>{step.note}</span>
+                        </div>
+                      )}
+
+                      {index < steps.length - 1 && (
+                        <div className="mt-5">
+                          <Button
+                            asChild
+                            variant="outline"
+                            size="sm"
+                            className="motion-press gap-2"
+                          >
+                            <Link to="/aktivasi">
+                              <span>Lanjut ke Step {index + 2}</span>
+                              <i className="fa-solid fa-arrow-right text-xs" aria-hidden="true" />
+                            </Link>
+                          </Button>
+                        </div>
+                      )}
                     </div>
-                  )}
-
-                  {step.note && (
-                    <p className="mt-4 flex gap-2.5 rounded-xl border border-warning/40 bg-warning/10 p-3.5 text-sm leading-relaxed text-warning-foreground">
-                      <i
-                        className="fa-solid fa-triangle-exclamation mt-0.5 shrink-0"
-                        aria-hidden="true"
-                      />
-                      <span>{step.note}</span>
-                    </p>
-                  )}
-
-                  {index < steps.length - 1 && (
-                    <Button asChild variant="outline" size="sm" className="mt-5">
-                      <Link to="/aktivasi">
-                        Lanjut ke Step {index + 2}
-                        <i className="fa-solid fa-arrow-right" aria-hidden="true" />
-                      </Link>
-                    </Button>
-                  )}
-                </div>
-              </div>
+                  </div>
+                </SpotlightSurface>
+              </Reveal>
             </li>
           ))}
         </ol>
 
-        <div className="mt-8">
-          <Button asChild size="lg">
-            <Link to="/aktivasi">Mulai Aktivasi Sekarang</Link>
+        <Reveal className="mt-8">
+          <Button asChild size="lg" className="motion-press gap-2">
+            <Link to="/aktivasi">
+              <i className="fa-solid fa-bolt text-xs" aria-hidden="true" />
+              <span>Mulai Aktivasi Sekarang</span>
+            </Link>
           </Button>
-        </div>
+        </Reveal>
       </section>
 
       <AfterSuccess />

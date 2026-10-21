@@ -36,7 +36,7 @@
 
 Website ini adalah **frontend** untuk API aktivasi Alight Motion Premium yang sudah tersedia di
 `https://am-premium-nimzz.vercel.app`. Website hanya mengintegrasikan endpoint resmi API
-tersebut: mengirim *magic link* ke email pengguna, lalu memverifikasinya untuk mengaktifkan
+tersebut: mengirim _magic link_ ke email pengguna, lalu memverifikasinya untuk mengaktifkan
 status Premium.
 
 Dibangun dengan **React 19 + TanStack Start (SSR)**, dan dilengkapi asisten chat AI ("Nimzz AI")
@@ -44,17 +44,17 @@ untuk membantu pengguna yang stuck di tengah proses aktivasi.
 
 ## Fitur & Halaman
 
-| Route | Deskripsi |
-|---|---|
-| `/` | Landing page — ringkasan layanan, checklist syarat, quick FAQ |
-| `/aktivasi` | Alur aktivasi 5 langkah (input email → kirim link → salin magic link → verifikasi → selesai) |
-| `/panduan` | Panduan step-by-step lengkap dengan screenshot, untuk pemula |
+| Route              | Deskripsi                                                                                                                            |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `/`                | Landing page — ringkasan layanan, checklist syarat, quick FAQ                                                                        |
+| `/aktivasi`        | Alur aktivasi 5 langkah (input email → kirim link → salin magic link → verifikasi → selesai)                                         |
+| `/panduan`         | Panduan step-by-step lengkap dengan screenshot, untuk pemula                                                                         |
 | `/troubleshooting` | Solusi error umum: email tidak masuk, `INVALID_EMAIL`, `INVALID_OOB_CODE`, `EXPIRED_OOB_CODE`, `TOO_MANY_ATTEMPTS`, API offline, dll |
-| `/faq` | Pertanyaan yang sering ditanyakan |
-| `/status` | Cek status API (online/offline, versi, uptime) + info paket |
-| `/sistem` | Penjelasan cara kerja sistem & alur data |
-| `/donasi` | Donasi sukarela via QRIS + upload bukti transfer (dikirim ke Telegram) |
-| `/api/nimzz-ai` | Endpoint chat streaming untuk asisten "Nimzz AI" |
+| `/faq`             | Pertanyaan yang sering ditanyakan                                                                                                    |
+| `/status`          | Cek status API (online/offline, versi, uptime) + info paket                                                                          |
+| `/sistem`          | Penjelasan cara kerja sistem & alur data                                                                                             |
+| `/donasi`          | Donasi sukarela via QRIS + upload bukti transfer (dikirim ke Telegram)                                                               |
+| `/api/nimzz-ai`    | Endpoint chat streaming untuk asisten "Nimzz AI"                                                                                     |
 
 **Nimzz AI** — chatbot bawaan (`NimzzAI.tsx`) yang fokus bantu user yang stuck (paling sering di
 step "cari magic link di email"), dilengkapi filter kata kasar, filter anti-jailbreak, dan rate
@@ -88,11 +88,11 @@ npm install
 
 Salin `.env.example` menjadi `.env`, lalu isi sesuai kebutuhan:
 
-| Variable | Wajib? | Secret? | Keterangan |
-|---|---|---|---|
-| `VITE_API_BASE_URL` | Tidak (ada default) | **Bukan** secret | URL API backend aktivasi |
-| `TELEGRAM_BOT_TOKEN` | Hanya jika fitur donasi dipakai | **Ya, secret** | Token bot Telegram penerima notifikasi donasi |
-| `TELEGRAM_CHAT_ID` | Hanya jika fitur donasi dipakai | **Ya, secret** | Chat ID tujuan notifikasi donasi |
+| Variable             | Wajib?                          | Secret?          | Keterangan                                    |
+| -------------------- | ------------------------------- | ---------------- | --------------------------------------------- |
+| `VITE_API_BASE_URL`  | Tidak (ada default)             | **Bukan** secret | URL API backend aktivasi                      |
+| `TELEGRAM_BOT_TOKEN` | Hanya jika fitur donasi dipakai | **Ya, secret**   | Token bot Telegram penerima notifikasi donasi |
+| `TELEGRAM_CHAT_ID`   | Hanya jika fitur donasi dipakai | **Ya, secret**   | Chat ID tujuan notifikasi donasi              |
 
 > ⚠️ Jangan pernah commit file `.env` yang sudah terisi. Set `TELEGRAM_BOT_TOKEN` &
 > `TELEGRAM_CHAT_ID` langsung di dashboard hosting (mis. Environment Variables di Vercel), bukan
@@ -159,14 +159,14 @@ src/
 
 ## Kustomisasi
 
-| Ingin ganti... | Edit |
-|---|---|
-| Site URL | `src/config/site.ts` → `siteUrl` |
-| Logo & favicon | `public/images/logo.png`, `public/favicon.png` |
-| Thumbnail (hero & popup welcome) | `public/images/thumbnail.png` |
-| OG image | `public/images/og-image.jpg` + `src/config/site.ts` → `ogImage` |
-| URL API backend | `src/config/api.ts` → `API_BASE_URL`, atau env `VITE_API_BASE_URL` |
-| QR donasi | `public/qris.jpg` |
+| Ingin ganti...                   | Edit                                                               |
+| -------------------------------- | ------------------------------------------------------------------ |
+| Site URL                         | `src/config/site.ts` → `siteUrl`                                   |
+| Logo & favicon                   | `public/images/logo.png`, `public/favicon.png`                     |
+| Thumbnail (hero & popup welcome) | `public/images/thumbnail.png`                                      |
+| OG image                         | `public/images/og-image.jpg` + `src/config/site.ts` → `ogImage`    |
+| URL API backend                  | `src/config/api.ts` → `API_BASE_URL`, atau env `VITE_API_BASE_URL` |
+| QR donasi                        | `public/qris.jpg`                                                  |
 
 ## Catatan Keamanan
 

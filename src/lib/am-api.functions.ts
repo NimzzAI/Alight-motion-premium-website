@@ -27,15 +27,17 @@ export type ActionResult = {
   ok: boolean;
   message: string;
   code?: string | undefined;
-  data?: {
-    email?: string | undefined;
-    uid?: string | undefined;
-    orderId?: string | undefined;
-    plan?: string | undefined;
-    duration?: string | undefined;
-    validUntil?: string | undefined;
-    benefits?: string[] | undefined;
-  } | undefined;
+  data?:
+    | {
+        email?: string | undefined;
+        uid?: string | undefined;
+        orderId?: string | undefined;
+        plan?: string | undefined;
+        duration?: string | undefined;
+        validUntil?: string | undefined;
+        benefits?: string[] | undefined;
+      }
+    | undefined;
 };
 
 const SENSITIVE = /token|secret|credential|password|cookie|refresh|idtoken|apikey/i;
@@ -56,8 +58,7 @@ function readableError(payload: Record<string, unknown>, status: number): Action
     (status >= 500 ? "SERVER_ERROR" : "UNKNOWN_ERROR");
   const code = rawCode.toUpperCase().replace(/[^A-Z_]/g, "_");
   const message =
-    pickString(payload, ["message", "msg", "detail", "description"]) ??
-    errorMessageFor(code);
+    pickString(payload, ["message", "msg", "detail", "description"]) ?? errorMessageFor(code);
   const generic = code === "UNKNOWN_ERROR" || code === "SERVER_ERROR";
   return {
     ok: false,
@@ -202,8 +203,7 @@ export const verifyMagicLink = createServerFn({ method: "POST" })
     const userObj = (nested["user"] ?? {}) as Record<string, unknown>;
     const premiumObj = (nested["premium"] ?? nested) as Record<string, unknown>;
     const plan = (premiumObj["plan"] ?? payload["plan"] ?? nested["plan"] ?? {}) as
-      | Record<string, unknown>
-      | string;
+      Record<string, unknown> | string;
     const planObject = typeof plan === "string" ? { name: plan } : plan;
     const benefits = [premiumObj["benefits"], payload["benefits"], nested["benefits"]].find(
       (value) => Array.isArray(value),
@@ -221,25 +221,34 @@ export const verifyMagicLink = createServerFn({ method: "POST" })
         ? premiumObj["orderId"]
         : pickString({ ...nested, ...payload }, ["orderId", "order_id"]);
 
+    const verifiedData = {
+      email: pickString({ ...userObj, ...nested, ...payload }, ["email"]) ?? data.email,
+      uid,
+      orderId,
+      plan: pickString(planObject as Record<string, unknown>, ["name", "type"]),
+      duration:
+        pickString(planObject as Record<string, unknown>, ["duration"]) ??
+        pickString({ ...premiumObj, ...nested, ...payload }, ["duration"]),
+      validUntil: pickString({ ...premiumObj, ...nested, ...payload }, [
+        "validUntil",
+        "expiresAt",
+        "expiry",
+        "expireAt",
+        "until",
+      ]),
+      benefits: benefits?.filter((b): b is string => typeof b === "string"),
+    };
+
+    try {
+      const { recordActivationTestimonial } = await import("@/lib/testimonials.functions");
+      recordActivationTestimonial(verifiedData);
+    } catch {
+      // non-blocking testimonial recording
+    }
+
     return {
       ok: true,
       message: "Verifikasi berhasil.",
-      data: {
-        email: pickString({ ...userObj, ...nested, ...payload }, ["email"]) ?? data.email,
-        uid,
-        orderId,
-        plan: pickString(planObject as Record<string, unknown>, ["name", "type"]),
-        duration:
-          pickString(planObject as Record<string, unknown>, ["duration"]) ??
-          pickString({ ...premiumObj, ...nested, ...payload }, ["duration"]),
-        validUntil: pickString({ ...premiumObj, ...nested, ...payload }, [
-          "validUntil",
-          "expiresAt",
-          "expiry",
-          "expireAt",
-          "until",
-        ]),
-        benefits: benefits?.filter((b): b is string => typeof b === "string"),
-      },
+      data: verifiedData,
     };
   });

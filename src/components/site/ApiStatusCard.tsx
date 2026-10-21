@@ -1,3 +1,4 @@
+import { SpotlightSurface } from "@/components/site/MotionPrimitives";
 import { Button } from "@/components/ui/button";
 import { formatTime, formatUptime, useApiHealth } from "@/hooks/use-api-status";
 
@@ -6,53 +7,81 @@ export function ApiStatusCard() {
   const online = data?.online === true;
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-soft">
-      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-        API Status
-      </p>
-      <p className="mt-2 flex items-center gap-2.5 text-2xl font-semibold">
-        <span
-          className={`h-3 w-3 rounded-full ${online ? "bg-success" : "bg-destructive"}`}
-          aria-hidden="true"
-        />
-        {online ? "Online" : "Offline"}
-      </p>
+    <SpotlightSurface className="p-6" interactive={false}>
+      <div className="flex items-center justify-between border-b border-border pb-4">
+        <div>
+          <p className="text-xs font-medium text-muted-foreground">API Status</p>
+          <p className="mt-1 flex items-center gap-2 text-xl font-semibold text-foreground">
+            <i
+              className={
+                online
+                  ? "fa-solid fa-circle-check text-base text-success"
+                  : "fa-solid fa-circle-exclamation text-base text-destructive"
+              }
+              aria-hidden="true"
+            />
+            <span>{online ? "Online" : "Offline"}</span>
+          </p>
+        </div>
+      </div>
 
       {online ? (
-        <dl className="mt-6 space-y-4 text-sm">
-          <div>
-            <dt className="text-muted-foreground">Version</dt>
-            <dd className="font-medium">{data?.version ?? "—"}</dd>
+        <dl className="mt-5 divide-y divide-border/70 text-sm">
+          <div className="flex items-center justify-between py-2.5">
+            <dt className="flex items-center gap-2 text-muted-foreground">
+              <i className="fa-solid fa-code-commit w-4 text-center text-xs" aria-hidden="true" />
+              <span>Version</span>
+            </dt>
+            <dd className="font-mono font-medium text-foreground tabular-nums">
+              {data?.version ?? "—"}
+            </dd>
           </div>
-          <div>
-            <dt className="text-muted-foreground">Uptime</dt>
-            <dd className="font-medium">{formatUptime(data?.uptime)}</dd>
+          <div className="flex items-center justify-between py-2.5">
+            <dt className="flex items-center gap-2 text-muted-foreground">
+              <i className="fa-regular fa-clock w-4 text-center text-xs" aria-hidden="true" />
+              <span>Uptime</span>
+            </dt>
+            <dd className="font-mono font-medium text-foreground tabular-nums">
+              {formatUptime(data?.uptime)}
+            </dd>
           </div>
-          <div>
-            <dt className="text-muted-foreground">Last checked</dt>
-            <dd className="font-medium">{formatTime(data?.checkedAt)}</dd>
+          <div className="flex items-center justify-between py-2.5">
+            <dt className="flex items-center gap-2 text-muted-foreground">
+              <i className="fa-solid fa-stopwatch w-4 text-center text-xs" aria-hidden="true" />
+              <span>Last checked</span>
+            </dt>
+            <dd className="font-mono font-medium text-foreground tabular-nums">
+              {formatTime(data?.checkedAt)}
+            </dd>
           </div>
         </dl>
       ) : (
-        <p className="mt-4 text-sm text-muted-foreground">
-          API sedang tidak dapat dihubungi. Periksa koneksi internet kamu, lalu tekan Refresh
-          Status.
-        </p>
+        <div className="mt-4 rounded-xl border border-destructive/30 bg-destructive/6 p-3.5 text-sm leading-relaxed text-muted-foreground">
+          <p className="flex items-start gap-2.5">
+            <i
+              className="fa-solid fa-plug-circle-xmark mt-0.5 text-destructive"
+              aria-hidden="true"
+            />
+            <span>
+              API sedang tidak dapat dihubungi. Periksa koneksi internet kamu, lalu tekan Refresh
+              Status.
+            </span>
+          </p>
+        </div>
       )}
 
       <Button
         variant="outline"
-        className="mt-6 w-full"
+        className="motion-press mt-5 w-full gap-2"
         onClick={() => void refetch()}
         disabled={isFetching}
       >
-        {isFetching ? (
-          <i className="fa-solid fa-spinner fa-spin" aria-hidden="true" />
-        ) : (
-          <i className="fa-solid fa-rotate-right" aria-hidden="true" />
-        )}
-        {isFetching ? "Memeriksa..." : "Refresh Status"}
+        <i
+          className={isFetching ? "fa-solid fa-spinner fa-spin" : "fa-solid fa-rotate-right"}
+          aria-hidden="true"
+        />
+        <span>{isFetching ? "Memeriksa..." : "Refresh Status"}</span>
       </Button>
-    </div>
+    </SpotlightSurface>
   );
 }
