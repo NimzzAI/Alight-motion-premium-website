@@ -153,7 +153,7 @@ export const getInfo = createServerFn({ method: "GET" }).handler(async (): Promi
 const emailSchema = z.object({ email: z.string().trim().min(3).max(320) });
 
 export const sendMagicLink = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => emailSchema.parse(data))
+  .validator((data: unknown) => emailSchema.parse(data))
   .handler(async ({ data }): Promise<ActionResult> => {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email)) {
       return { ok: false, code: "INVALID_EMAIL", message: errorMessageFor("INVALID_EMAIL") };
@@ -181,7 +181,7 @@ const verifySchema = z.object({
 });
 
 export const verifyMagicLink = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => verifySchema.parse(data))
+  .validator((data: unknown) => verifySchema.parse(data))
   .handler(async ({ data }): Promise<ActionResult> => {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email)) {
       return { ok: false, code: "INVALID_EMAIL", message: errorMessageFor("INVALID_EMAIL") };

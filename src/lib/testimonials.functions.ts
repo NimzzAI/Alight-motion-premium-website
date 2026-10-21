@@ -212,7 +212,7 @@ const simulateSchema = z.object({
 });
 
 export const simulateLiveTestimonial = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => simulateSchema.parse(data ?? {}))
+  .validator((data: unknown) => simulateSchema.parse(data ?? {}))
   .handler(async ({ data }): Promise<TestimonialRecord> => {
     const samplePrefixes = [
       "angga.putra",
